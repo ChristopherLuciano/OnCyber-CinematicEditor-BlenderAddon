@@ -1,7 +1,6 @@
+<div align="center"><img src="https://github.com/ChristopherLuciano/Oncyber-CinematicEditor-BlenderAddon/raw/main/images/screenshot01.png"></div>
+
 ![GitHub](https://img.shields.io/github/license/ChristopherLuciano/OnCyber-CinematicEditor-BlenderAddon?label=License)
-
-
-![screenshot01.png](https://github.com/ChristopherLuciano/Oncyber-CinematicEditor-BlenderAddon/raw/main/images/screenshot01.png)
 
 # OnCyber-CinematicEditor-BlenderAddon
 Blender-based Cinematic spline editor for use with the Oncyber cinematic video creator.
@@ -44,32 +43,9 @@ This add-on adopts a similar methodology:
 * The matching of DOLLY and LOOKAT positions are done alphabetically at export time.  All objects under DOLLY are alphabetically sorted, then all objects under LOOKAT are also alphabetically sorted, then the positions are matched up 1:1.  See [Output](#output) below for more details.
 
  SPLINE, DOLLY, and LOOKAT collections are organized as follows:
-```markdown
-├── SPLINE.000
-│   ├── DOLLY.000
-│   │   ├── dolly object.000
-│   │   ├── dolly object.001
-│   │   ├── dolly object.002
-│   │   ├── dolly object.003
-│   ├── LOOKAT.000
-│   │   ├── lookat object.000
-│   │   ├── lookat object.001
-│   │   ├── lookat object.002
-│   │   ├── lookat object.003
-├── SPLINE.001
-│   ├── DOLLY.001
-│   │   ├── dolly object.004
-│   │   ├── dolly object.005
-│   │   ├── dolly object.006
-│   │   ├── dolly object.007
-│   ├── LOOKAT.001
-│   │   ├── lookat object.004
-│   │   ├── lookat object.005
-│   │   ├── lookat object.006
-│   │   ├── lookat object.007
-...etc...
-```
-The SPLINE, DOLLY, and LOOKAT items above are Collections.  The objects can be any Blender object which you like.  When you choose 'Add New Spline and Nodes', the add-on creates Cube meshes and assigns materials according to the same color scheme as used in Oncyber: green for DOLLY, blue for LOOKAT.
+<div align="center"><img src="https://github.com/ChristopherLuciano/Oncyber-CinematicEditor-BlenderAddon/raw/main/images/screenshot02-outliner.png"></div>
+
+The SPLINE (spline.049), DOLLY (dolly.049), and LOOKAT (lookat.049) items above are Collections.  The objects (e.g., dolly.241) can be any Blender object which you like.  When you choose 'Add New Spline and Nodes', the add-on creates Cube meshes and assigns materials according to the same color scheme as used in Oncyber: green for DOLLY, blue for LOOKAT.
 
 **IMPORTANT:** For proper operation, the current version of this add-on assumes the following naming conventions:
 * SPLINE collection: name begins with 'spline'
@@ -78,7 +54,9 @@ The SPLINE, DOLLY, and LOOKAT items above are Collections.  The objects can be a
 * objects can have any name, but note that exporting is done alphabetically
 
 ## Usage
-The add-on is separated into individual sections as described below.  Refer to the screenshot shown above to see each of these within the add-on interface.
+The add-on is separated into individual sections as described below.
+
+<div align="center"><img src="https://github.com/ChristopherLuciano/Oncyber-CinematicEditor-BlenderAddon/raw/main/images/screenshot01-closeup.png"></div>
 
 ### Import
 You can import a JSON file which was created either from this add-on or from the Oncyber Cinematic Editor directly (e.g., cinematic.json)
