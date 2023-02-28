@@ -207,7 +207,7 @@ def create_default_node( context, parentCollection, objName, matName, matColor )
     
     newMaterial = bpy.data.materials.get( matName )
     if newMaterial is None:
-        newMaterial = bpy.data.materials.new( name=material_name )
+        newMaterial = bpy.data.materials.new( name=matName )
         newMaterial.diffuse_color = matColor
     newCube.data.materials.append( newMaterial )                    
     newCube.show_name = True
@@ -292,6 +292,7 @@ def preview_node( context, operator, params ):
                 
     cinematicCamera = get_camera()
     if cinematicCamera is not None:
+        bpy.context.scene.camera = cinematicCamera
         dollyObject = bpy.context.active_object;
         if len( dollyObject.users_collection ) != 1:
             operator.report( {"ERROR"}, "Wrong structure: Dolly " + dollyObject.name + " in more than one collection." ) 
@@ -326,23 +327,19 @@ def preview_node( context, operator, params ):
 
         context.region_data.view_perspective = "CAMERA"
         
-        #hide all splines
-        for splineIndex in range( 0, 100, 1 ):
-            splineName = "spline." + f"{splineIndex:03d}"
-            if splineName in bpy.data.collections:
-                spline = bpy.data.collections[ splineName ]        
-                spline.hide_viewport = True
+        show_hide_splines( context, True )
+        
         operator.report( {"INFO"}, "Preview active" )
-    else:
-        operator.report( {"ERROR"}, "Camera not found" )
+
+def show_hide_splines( context, hideInViewport ):
+    for index in range( 0, len( context.scene.splineList ), 1 ):
+        splineTree = context.scene.splineList[ index ].splineTree
+        if splineTree is not None:
+            splineTree.hide_viewport = hideInViewport
 
 def cancel_preview( context, operator, params ):
     context.region_data.view_perspective = "PERSP"
-    for splineIndex in range( 0, 100, 1 ):
-        splineName = "spline." + f"{splineIndex:03d}"
-        if splineName in bpy.data.collections:
-            spline = bpy.data.collections[ splineName ]        
-            spline.hide_viewport = False
+    show_hide_splines( context, False )
     cinematicCamera = get_camera()
     if cinematicCamera is not None:
         for cns in cinematicCamera.constraints:
