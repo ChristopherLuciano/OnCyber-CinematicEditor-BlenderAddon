@@ -71,6 +71,12 @@ This add-on adopts a similar methodology:
 ```
 The SPLINE, DOLLY, and LOOKAT items above are Collections.  The objects can be any Blender object which you like.  When you choose 'Add New Spline and Nodes', the add-on creates Cube meshes and assigns materials according to the same color scheme as used in Oncyber: green for DOLLY, blue for LOOKAT.
 
+**IMPORTANT:** For proper operation, the current version of this add-on assumes the following naming conventions:
+* SPLINE collection: name begins with 'spline'
+* DOLLY collection: name begins with 'dolly'
+* LOOKAT collection: name begins with 'lookat'
+* objects can have any name, but note that exporting is done alphabetically
+
 ## Usage
 The add-on is separated into individual sections as described below.  Refer to the screenshot shown above to see each of these within the add-on interface.
 
@@ -121,6 +127,7 @@ This is the main section of the add-on and where you will manage your SPLINE nod
 	 * If you don't already have a camera in your scene, this will add a new camera named 'OncyberCinematic' for you.  This camera will be created with the necessary configuration to closely match that used within the Oncyber Cinematic Editor.
  * Preview Node
 	 * This allows for quickly jumping into camera view to preview the camera angle
+	 * You must have a DOLLY object selected in the outliner before entering Preview mode
 	 * It does the following:
 		 * Switch the 3D Viewport into camera view (equivalent to the Blender hotkey Numpad 0)
 		 * Position the camera to the same position as the chosen DOLLY object
