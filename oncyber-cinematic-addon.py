@@ -4,7 +4,7 @@ bl_info = {
     "blender": (3, 0, 0),
     "category": "Object",
     "version": (0, 0, 1),
-    "author": "@CJLuciano - SmasthTheBat.com",
+    "author": "@CJLuciano - SmasthTheBat.com | HenyoSoftware.com",
     "description": "Spline data editor for use in Oncyber Cinematic editor",
     "doc_url": "https://github.com/ChristopherLuciano/Oncyber-CinematicEditor-BlenderAddon",
 }
@@ -76,7 +76,7 @@ def generate_output(context, operator, params):
     for index in range( 0, len( context.scene.splineList ), 1 ):
         splineTree = context.scene.splineList[ index ].splineTree
         if splineTree is None:
-            operator.report({"ERROR"}, "Collection error: was it deleted?")
+            operator.report({"ERROR"}, "Collection error: SPLINE " + context.scene.splineList[ index ].name + " missing Target")
             return;
         splineName = splineTree.name
         dollys = None 
@@ -106,11 +106,15 @@ def generate_output(context, operator, params):
                 outputData[ "export" ][ index ][ "position" ].append( [  dolly.location.x,  dolly.location.z,  dolly.location.y * -1  ] )
                 outputData[ "export" ][ index ][ "lookat"   ].append( [ lookat.location.x, lookat.location.z, lookat.location.y * -1  ] )
 
-    outputFile = open( output_file, "w" )
-    outputFile.write( json.dumps(outputData, indent=4) )
-    now = datetime.now()
-    setattr( bpy.types.Scene, "status_message", "File generated at: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") )
-    operator.report( {"INFO"}, "File generated" )
+    try:
+        outputFile = open( output_file, "w" )
+        outputFile.write( json.dumps(outputData, indent=4) )
+        outputFile.close()
+        now = datetime.now()
+        setattr( bpy.types.Scene, "status_message", "File generated at: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") )
+        operator.report( {"INFO"}, "File generated" )
+    except:
+        operator.report( {"ERROR"}, "Could not write the file " + output_file )        
         
 def create_new_spline_structure( parentCollection ):
     collectionSpline = bpy.data.collections.new( "spline" )
@@ -330,6 +334,8 @@ def preview_node( context, operator, params ):
         show_hide_splines( context, True )
         
         operator.report( {"INFO"}, "Preview active" )
+    else:
+        operator.report( {"ERROR"}, "Please select a camera" )
 
 def show_hide_splines( context, hideInViewport ):
     for index in range( 0, len( context.scene.splineList ), 1 ):
@@ -512,14 +518,7 @@ class SPLINE_UL_List( UIList ):
     def draw_item( self, context, layout, data, item, icon, active_data, active_propname, index ):
         self.use_filter_show = False
         if self.layout_type in { "DEFAULT", "COMPACT" }:
-            displayName = ""
-            if item.splineTree is None:
-                displayName = "~deleted~"
-            elif item.splineTree.name == "" or item.splineTree.name is None:
-                displayName = "~deleted~"
-            else:
-                displayName = item.name #splineCollection.name
-
+            displayName = item.name
             layout.label(text=displayName, icon = "OUTLINER_COLLECTION")
             if item.splineTree is not None:
                 layout.label( text="( " + item.splineTree.name + " )" )
@@ -530,6 +529,28 @@ class SPLINE_UL_List( UIList ):
                     else: iconName = "HIDE_ON"
                 hideBtnOp = layout.operator( "opr.object_hidespline", text="", icon=iconName )
                 hideBtnOp.index = index
+            else:
+                layout.label( text="" )
+                
+            
+            """
+            if item.splineTree is None:
+                displayName = "~deleted~"
+            elif item.splineTree.name == "" or item.splineTree.name is None:
+                displayName = "~deleted~"
+            else:
+                displayName = item.name #splineCollection.name
+            layout.label(text=displayName, icon = "OUTLINER_COLLECTION")
+            if item.splineTree is not None:
+                layout.label( text="( " + item.splineTree.name + " )" )
+                iconName = "TRIA_UP"
+                collectionInView = get_spline_collection_viewlayer( item.splineTree.name )
+                if collectionInView is not None:
+                    if collectionInView.hide_viewport == False: iconName = "HIDE_OFF"
+                    else: iconName = "HIDE_ON"
+                hideBtnOp = layout.operator( "opr.object_hidespline", text="", icon=iconName )
+                hideBtnOp.index = index
+            """                
         elif self.layout_type in { "GRID" }:
             layout.alignment = "CENTER"
             layout.label( text="", icon="OBJECT_DATAMODE" )
@@ -687,7 +708,6 @@ def register():
         
     bpy.types.Scene.splineList = CollectionProperty( type = SplineListItem )
     bpy.types.Scene.list_index = IntProperty(name="", description="", default = 0)
-        
 
 def unregister():
     del bpy.types.Scene.splineList
@@ -704,4 +724,3 @@ if __name__ == "__main__":
     register()
     
     
-
